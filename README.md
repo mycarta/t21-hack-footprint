@@ -10,17 +10,17 @@ Repo for the [TRANSFORM 2021 Hackathon](https://github.com/softwareunderground/t
 
 ## Conda setup
 ```
-# To create the conda environment (called "footprint") for this repo, use
-#
-#     $ conda env create -f environment.yml
-#
-# To activate the environment, use
-#
-#     $ conda activate footprint
-#
-# To deactivate the environment, use
-#
-#     $ conda deactivate
+To create the conda environment (called "footprint") for this repo, use
+
+     $ conda env create -f environment.yml
+
+To activate the environment, use
+
+     $ conda activate footprint
+
+To deactivate the environment, use
+
+     $ conda deactivate
 ```
 
 ## Description and background
