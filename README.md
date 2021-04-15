@@ -5,8 +5,8 @@ Repo for the TRANSFORM 2021 Hackathon project on seismic acquisition footprint n
 [t21-hack-footprint](https://app.slack.com/client/T094HBB9T/C01SRMBK50B/thread/C01MZBV60G0-1616097803.005500)
 
 ## People
-* @mycarta 
-* @scibbatical
+* [@mycarta](https://github.com/mycarta) 
+* [@scibbatical](https://github.com/scibbatical)
 
 ## Pre-hackathon project discussion
 https://github.com/softwareunderground/transform-2021-hackathon/discussions/9
