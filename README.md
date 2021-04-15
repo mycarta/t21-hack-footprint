@@ -38,3 +38,11 @@ Elwyn and I will be working on this no-matter-what. But we welcome participants 
 * Testing
 * Documentation
 * Ideas - any ideas or suggestion is welcome
+
+
+## Conda setup ##
+To create the conda environment (called "footprint") for this repo run:
+
+```
+conda env create -f environment.yml
+```

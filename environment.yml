@@ -1,0 +1,12 @@
+name: footprint
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy
+  - scipy
+  - scikit-image
+  - matplotlib
+  - astropy
+  - kneed
+  - segyio
