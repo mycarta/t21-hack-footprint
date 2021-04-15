@@ -15,7 +15,6 @@ https://github.com/softwareunderground/transform-2021-hackathon/discussions/9
 - PowerPoint presentation [here](https://docs.google.com/presentation/d/1xVvdvlpVVrXmgntH651JXqLq-8w0bPWm4E9x2iRnNYk/edit#slide=id.gd23752e0b2_1_0)
 - For a definition of acquisition footprint read the [SEG Wiki](https://wiki.seg.org/wiki/Dictionary:Acquisition_footprint_or_imprint)
 - For some examples, read this [blog post](https://mycarta.wordpress.com/2017/08/13/what-is-acquisition-footprint-noise-in-seismic-data), and also go to the Resources and reading material below
-
 - Project background: Elwyn and I have done some work putting together a tool to remove acquisition footprint from seismic data; this has been my longest-lived side project. 
 - If you are curious about it, please read [Chapter 39](https://github.com/softwareunderground/52things/blob/master/chapters/Niccoli_2.md) of the upcoming [52 Things You Should Know About Geocomputing](https://github.com/softwareunderground/52things) and then head over to the [Tutorial notebook](https://github.com/mycarta/2D_FFT_filter_tutorial/blob/master/52-things_tutorial.ipynb) I put together to give it a spin
 
