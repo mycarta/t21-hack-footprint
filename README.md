@@ -1,5 +1,5 @@
 # t21-hack-footprint
-Repo for the TRANSFORM 2021 Hackathon project on seismic acquisition footprint noise filtering
+Repo for the [TRANSFORM 2021 Hackathon](https://github.com/softwareunderground/transform-2021-hackathon/discussions) project on seismic acquisition footprint noise filtering
 
 ## Slack channel
 [t21-hack-footprint](https://app.slack.com/client/T094HBB9T/C01SRMBK50B/thread/C01MZBV60G0-1616097803.005500)
