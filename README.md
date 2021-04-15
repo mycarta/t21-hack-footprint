@@ -8,6 +8,13 @@ Repo for the [TRANSFORM 2021 Hackathon](https://github.com/softwareunderground/t
 * [@mycarta](https://github.com/mycarta) 
 * [@scibbatical](https://github.com/scibbatical)
 
+## Conda setup
+To create the conda environment (called "footprint") for this repo run:
+
+```
+conda env create -f environment.yml
+```
+
 ## Description and background
 - PowerPoint presentation [here](https://docs.google.com/presentation/d/1xVvdvlpVVrXmgntH651JXqLq-8w0bPWm4E9x2iRnNYk/edit#slide=id.gd23752e0b2_1_0)
 - For a definition of acquisition footprint read the [SEG Wiki](https://wiki.seg.org/wiki/Dictionary:Acquisition_footprint_or_imprint)
@@ -39,10 +46,3 @@ Elwyn and I will be working on this no-matter-what. But we welcome participants 
 * Documentation
 * Ideas - any ideas or suggestion is welcome
 
-
-## Conda setup ##
-To create the conda environment (called "footprint") for this repo run:
-
-```
-conda env create -f environment.yml
-```
