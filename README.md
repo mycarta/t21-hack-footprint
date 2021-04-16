@@ -28,7 +28,7 @@ To deactivate the environment, use
 - For a definition of acquisition footprint read the [SEG Wiki](https://wiki.seg.org/wiki/Dictionary:Acquisition_footprint_or_imprint)
 - For some examples, read this [blog post](https://mycarta.wordpress.com/2017/08/13/what-is-acquisition-footprint-noise-in-seismic-data), and also go to the Resources and reading material below
 - Project background: Elwyn and I have done some work putting together a tool to remove acquisition footprint from seismic data; this has been my longest-lived side project. 
-- If you are curious about it, please read [Chapter 39](https://github.com/softwareunderground/52things/blob/master/chapters/Niccoli_2.md) of the upcoming [52 Things You Should Know About Geocomputing](https://github.com/softwareunderground/52things) and then head over to the [Tutorial notebook](https://github.com/mycarta/t21-hack-footprint/blob/master/52-things_geocomputing_book_FFT_tutorial.ipynb); give it a spin
+- If you are curious about it, please read [Chapter 39](https://github.com/softwareunderground/52things/blob/master/chapters/Niccoli_2.md) of the upcoming [52 Things You Should Know About Geocomputing](https://github.com/softwareunderground/52things) and then head over to the [Tutorial notebook](https://github.com/mycarta/t21-hack-footprint/blob/main/52-things_geocomputing_book_FFT_tutorial.ipynb); give it a spin
 
 ## Goals
 The long term goal (AKA, the "dream") would be to create an open-source tool, ideally part of [Awesome Open Geoscience](https://github.com/softwareunderground/awesome-open-geoscience), that can be used by geophysicists and geologists to remove footprint from seismic data, WHEN 5D interpolation or other costly post-stack processing works are not an options.
