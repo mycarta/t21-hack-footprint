@@ -180,6 +180,12 @@ def _reverse_padding_3D(im, filtered_im, slc):
 
 ###################################
 
+def apply_filter(arr, _filter, axes=(0,1)):
+    return ifft2(
+        np.multiply(ifftshift(1 - _filter), fft2(tc, axes=axes)),
+        axes=axes,
+    ).real
+
 
 def apply_filter_iterative(_filter, arr):
     # %%timeit
@@ -192,7 +198,7 @@ def apply_filter_iterative(_filter, arr):
         ts, slc = pad_next_square_size(out[:, :, i])
 
         # do all the FFT magic to apply the filter to the slice
-        temp = ifft2(np.multiply(ifftshift(1 - _filter), fft2(ts.copy()))).real
+        temp = apply_filter(ts, _filter)        
 
         # reverse the padding
         out[:, :, i] = reverse_padding(arr[:, :, i], temp, slc)
@@ -203,10 +209,7 @@ def apply_filter_iterative(_filter, arr):
 def apply_filter_vector(_filter, arr):
     out = arr.copy()
     tc, slc = pad_next_square_size(out)
-    temp = ifft2(
-        np.multiply(ifftshift(1 - _filter[:, :, None]), fft2(tc, axes=(0, 1))),
-        axes=(0, 1),
-    ).real
+    temp = apply_filter(tc, _filter[:, :, None])
     return reverse_padding(arr, temp, slc)
 
 
@@ -215,10 +218,7 @@ def apply_filter_vector_dask(_filter, arr):
     tc, slc = pad_next_square_size(out)
     tc = da.from_array(tc, (-1, -1, 5))
     _filter = da.from_array(_filter)
-    temp = ifft2(
-        np.multiply(ifftshift(1 - _filter[:, :, None]), fft2(tc, axes=(0, 1))),
-        axes=(0, 1),
-    ).real
+    temp = apply_filter(tc, _filter[:, :, None])
     return reverse_padding(arr, temp, slc)
 
 
