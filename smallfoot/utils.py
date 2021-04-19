@@ -182,7 +182,7 @@ def _reverse_padding_3D(im, filtered_im, slc):
 
 def apply_filter(arr, _filter, axes=(0,1)):
     return ifft2(
-        np.multiply(ifftshift(1 - _filter), fft2(tc, axes=axes)),
+        np.multiply(ifftshift(1 - _filter), fft2(arr, axes=axes)),
         axes=axes,
     ).real
 
