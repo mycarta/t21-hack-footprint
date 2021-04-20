@@ -1,1 +1,4 @@
 .ipynb_checkpoints/
+dask-worker-space/
+__pychache__
+**/__pycache__/

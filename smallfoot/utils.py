@@ -1,5 +1,7 @@
 import numpy as np
 from numpy.fft import fft2, ifft2, ifftshift
+import dask.array as da
+import dask.array.fft as dff
 
 ###################################
 
@@ -63,7 +65,7 @@ def reverse_padding(arr, filtered_arr, slc):
     if len(arr.shape) == 2:
         return _reverse_padding_2D(arr, filtered_arr, slc)
     elif len(arr.shape) == 3:
-        return _reverse_padding_2D(arr, filtered_arr, slc)
+        return _reverse_padding_3D(arr, filtered_arr, slc)
     else:
         raise AttributeError(
             f"Unknown number of dimensions of array to normalise. Array deimensions: {len(arr.shape)}"
@@ -96,14 +98,14 @@ def _pad_next_square_size_3D(im):
         deficit2 = deficit1 + 1
 
     if m > n:
-        print("Padded image columns")
+#         print("Padded image columns")
         return (
             np.pad(im, ((0, 0), (deficit1, deficit2), (0, 0)), "reflect"),
             slice(deficit1, -deficit2),
         )
 
     else:
-        print("Padded image rows")
+#         print("Padded image rows")
         return (
             np.pad(im, ((deficit1, deficit2), (0, 0), (0, 0)), "reflect"),
             slice(deficit1, -deficit2),
@@ -136,14 +138,14 @@ def _pad_next_square_size_2D(im):
         deficit2 = deficit1 + 1
 
     if m > n:
-        print("Padded image columns")
+#         print("Padded image columns")
         return (
             np.pad(im, ((0, 0), (deficit1, deficit2)), "reflect"),
             slice(deficit1, -deficit2),
         )
 
     else:
-        print("Padded image rows")
+#         print("Padded image rows")
         return (
             np.pad(im, ((deficit1, deficit2), (0, 0)), "reflect"),
             slice(deficit1, -deficit2),
@@ -154,10 +156,10 @@ def _reverse_padding_2D(im, filtered_im, slc):
     m, n = np.shape(im)  # get input shape
 
     if m > n:
-        print("Unpadding image columns")
+#         print("Unpadding image columns")
         return filtered_im[:, slc]
     else:
-        print("Unpadding image rows")
+#         print("Unpadding image rows")
         return filtered_im[slc, :]
 
 
@@ -165,10 +167,10 @@ def _reverse_padding_3D(im, filtered_im, slc):
     m, n, _ = np.shape(im)  # get input shape
 
     if m > n:
-        print("Unpadding image columns")
+#         print("Unpadding image columns")
         return filtered_im[:, slc, :]
     else:
-        print("Unpadding image rows")
+#         print("Unpadding image rows")
         return filtered_im[slc, :, :]
 
 
@@ -177,6 +179,12 @@ def _reverse_padding_3D(im, filtered_im, slc):
 # FFTS
 
 ###################################
+
+def apply_filter(arr, _filter, axes=(0,1)):
+    return ifft2(
+        np.multiply(ifftshift(1 - _filter), fft2(arr, axes=axes)),
+        axes=axes,
+    ).real
 
 
 def apply_filter_iterative(_filter, arr):
@@ -190,7 +198,7 @@ def apply_filter_iterative(_filter, arr):
         ts, slc = pad_next_square_size(out[:, :, i])
 
         # do all the FFT magic to apply the filter to the slice
-        temp = ifft2(np.multiply(ifftshift(1 - _filter), fft2(ts.copy()))).real
+        temp = apply_filter(ts, _filter)        
 
         # reverse the padding
         out[:, :, i] = reverse_padding(arr[:, :, i], temp, slc)
@@ -201,8 +209,26 @@ def apply_filter_iterative(_filter, arr):
 def apply_filter_vector(_filter, arr):
     out = arr.copy()
     tc, slc = pad_next_square_size(out)
-    temp = ifft2(
-        np.multiply(ifftshift(1 - _filter[:, :, None]), fft2(tc, axes=(0, 1))),
+    temp = apply_filter(tc, _filter[:, :, None])
+    return reverse_padding(arr, temp, slc)
+
+
+def apply_filter_vector_dask(_filter, arr):
+    out = arr.copy()
+    tc, slc = pad_next_square_size(out)
+    tc = da.from_array(tc, (-1, -1, 5))
+    _filter = da.from_array(_filter)
+    temp = apply_filter(tc, _filter[:, :, None])
+    return reverse_padding(arr, temp, slc)
+
+
+def apply_filter_vector_dask_true(_filter, arr):
+    out = arr.copy()
+    tc, slc = pad_next_square_size(out)
+    tc = da.from_array(tc, (-1, -1, 5))
+    _filter = da.from_array(_filter)
+    temp = dff.ifft2(
+        da.multiply(dff.ifftshift(1 - _filter[:, :, None]), dff.fft2(tc, axes=(0, 1))),
         axes=(0, 1),
-    ).real
+    ).real 
     return reverse_padding(arr, temp, slc)
