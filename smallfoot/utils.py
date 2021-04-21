@@ -180,57 +180,11 @@ def _reverse_padding_3D(im, filtered_im, slc):
 # FFTS
 
 ###################################
-
 def apply_filter(arr, _filter, axes=(0,1)):
     return ifft2(
         np.multiply(ifftshift(1 - _filter), fft2(arr, axes=axes)),
         axes=axes,
     ).real
-
-def apply_filter_pytorch(arr, _filter, axes=(0,1), cuda=False):
-    _filter = torch.from_numpy(_filter)
-    arr = torch.from_numpy(arr)
-    print(_filter.shape)
-    print(arr.shape)
-    if cuda == True:
-        _filter=_filter.cuda()
-        arr=arr.cuda()
-    result = torch.fft.ifft2(torch.multiply(torch.fft.ifftshift(1.0-_filter),torch.fft.fft2(arr, dim =axes)))
-    if cuda == True:
-        result= result.cpu()
-    result= result.numpy().real
-    return result
-
-
-
-def apply_filter_iterative_pytorch(_filter, arr, cuda=False):
-    # %%timeit
-    out = arr.copy()
-    # loop through time slices
-    for i in range(arr.shape[-1]):
-
-        # pad slice
-        ts, slc = pad_next_square_size(out[:, :, i])
-
-        # do all the FFT magic to apply the filter to the slice
-        if cuda == True:
-            temp = apply_filter_pytorch(ts, _filter, cuda=True)        
-        else:
-            temp = apply_filter_pytorch(ts, _filter) 
-        # reverse the padding
-        out[:, :, i] = reverse_padding(arr[:, :, i], temp, slc)
-
-    return out
-
-def apply_filter_vector_pytorch(_filter, arr, cuda=False):
-    out = arr.copy()
-    tc, slc = pad_next_square_size(out)
-    
-    if cuda == True:
-        temp = apply_filter_pytorch(tc, _filter[:, :, None], cuda=True)        
-    else:
-        temp = apply_filter_pytorch(tc, _filter[:, :, None], cuda=False) 
-    return reverse_padding(arr, temp, slc)
 
 def apply_filter_iterative(_filter, arr):
     # %%timeit
@@ -276,4 +230,74 @@ def apply_filter_vector_dask_true(_filter, arr, chunk=5):
         da.multiply(dff.ifftshift(1 - _filter[:, :, None]), dff.fft2(tc, axes=(0, 1))),
         axes=(0, 1),
     ).real 
+    return reverse_padding(arr, temp, slc)
+
+###################################
+
+# FFTS Pytorch
+
+###################################
+
+def apply_filter_pytorch(arr, _filter, axes=(0,1), cuda=False):
+    """
+    Applying Filter using pytorch for iterative method.
+    """    
+    _filter = torch.from_numpy(_filter)
+    arr = torch.from_numpy(arr)
+    if cuda == True:
+        _filter=_filter.cuda()
+        arr=arr.cuda()
+    result = torch.fft.ifft2(torch.multiply(torch.fft.ifftshift(1.0-_filter),torch.fft.fft2(arr, dim =axes)))
+    if cuda == True:
+        result= result.cpu()
+    result= result.numpy().real
+    return result
+
+def apply_filter_pytorch_vec(arr, _filter, axes=(0,1), cuda=False):
+    """
+    Applying Filter using pytorch for vectorized method.
+    """ 
+    _filter = torch.from_numpy(_filter)
+    arr = torch.from_numpy(arr)
+    if cuda == True:
+        _filter=_filter.cuda()
+        arr=arr.cuda()
+    result = torch.fft.ifft2(torch.multiply(torch.fft.ifftshift(1.0-_filter),torch.fft.fft2(arr, dim =axes)), dim =axes)
+    if cuda == True:
+        result= result.cpu()
+    result= result.numpy().real
+    return result
+
+def apply_filter_iterative_pytorch(_filter, arr, cuda=False):
+    """
+    Filter workflow (pad-filter-unpad) using iterative method.
+    """ 
+    out = arr.copy()
+    # loop through time slices
+    for i in range(arr.shape[-1]):
+
+        # pad slice
+        ts, slc = pad_next_square_size(out[:, :, i])
+
+        # do all the FFT magic to apply the filter to the slice
+        if cuda == True:
+            temp = apply_filter_pytorch(ts, _filter, cuda=True)
+        else:
+            temp = apply_filter_pytorch(ts, _filter) 
+        # reverse the padding
+        out[:, :, i] = reverse_padding(arr[:, :, i], temp, slc)
+
+    return out
+
+def apply_filter_vector_pytorch(_filter, arr, cuda=False):
+    """
+    Filter workflow (pad-filter-unpad) using vectorized method.
+    """ 
+    out = arr.copy()
+    tc, slc = pad_next_square_size(out)
+    
+    if cuda == True:
+        temp = apply_filter_pytorch_vec(tc, _filter[:, :, None], cuda=True)        
+    else:
+        temp = apply_filter_pytorch_vec(tc, _filter[:, :, None], cuda=False) 
     return reverse_padding(arr, temp, slc)
