@@ -1,7 +1,11 @@
 import matplotlib.pyplot as plt
 from skimage.util import img_as_float
 import numpy as np
-import utils
+
+try:
+    from . import utils
+except ImportError:
+    import utils
 
 import holoviews as hv
 
