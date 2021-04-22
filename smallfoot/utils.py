@@ -1,7 +1,7 @@
 import numpy as np
 import xarray as xr
-from scipy import signal
-from numpy.fft import fft2, ifft2, ifftshift
+from scipy import signal, ndimage
+from numpy.fft import fft2, ifft2, ifftshift, fftshift
 import dask.array as da
 import dask.array.fft as dff
 import torch
@@ -343,7 +343,9 @@ def time_cube_to_xarray(time_cube):
             # That correspond
             "time_slice": np.arange(time_cube.shape[2]),
         },
-        data_vars={"amplitude": (("y", "x", "time_slice"), time_cube)},
+        data_vars={"amplitude": (("y", "x", "time_slice"), time_cube),
+                  "spec_amp": (("y", "x", "time_slice"), 
+                              ndimage.gaussian_filter(np.abs(fftshift(fft2(time_cube, axes=[0,1]), axes=[0,1])), [0,0,20]))},
     )
     return ds_xr
 

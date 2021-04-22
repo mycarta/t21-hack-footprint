@@ -7,6 +7,7 @@ import plotting
 import holoviews as hv
 from holoviews.selection import link_selections
 import hvplot.xarray  # noqa
+from scipy.ndimage import gaussian_filter
 
 import param
 
@@ -63,12 +64,18 @@ class FilterDesigner(param.Parameterized):
         )
         return options
 
+#     @pn.depends("time_slice_slider.value")
+#     def _spectrum_graph(self):
+#         spectrum = plotting.view_spectrum(
+#             self.ds.isel(time_slice=self.time_slice_slider.value).amplitude.values
+#         ).opts(plot=dict(shared_axes=False))
+#         return spectrum
+
     @pn.depends("time_slice_slider.value")
     def _spectrum_graph(self):
-        spectrum = plotting.view_spectrum(
-            self.ds.isel(time_slice=self.time_slice_slider.value).amplitude.values
-        ).opts(plot=dict(shared_axes=False))
-        return spectrum
+        return hv.Image(np.log(self.ds.isel(time_slice=self.time_slice_slider.value).spec_amp.values +
+                               1)).opts(cmap="cubehelix", title="FFT Spectrum") #, plot=dict(shared_axes=False))
+
 
     @pn.depends("selection.selection_expr")
     def _update_filter(self):
@@ -88,7 +95,7 @@ class FilterDesigner(param.Parameterized):
             ] = 1
             data = hvds["val"].reshape(self.filter_.shape).copy().T[::-1]
 
-            gauss_kernel = utils.scipy_gaussian_2D(11)
+            gauss_kernel = utils.scipy_gaussian_2D(int(self.filter_.shape[1]/40))
             filter00 = signal.fftconvolve(data, gauss_kernel, mode="same")
             filter00 = utils.normalise(filter00)
 
@@ -165,6 +172,7 @@ class FilterDesigner(param.Parameterized):
 
 
 if "bokeh_app" in __name__:
-    penobscot = np.load("images_and_data/penobscot.npy")
-    fd = FilterDesigner(penobscot)
+    seismic = np.load("images_and_data/penobscot.npy")
+#     seismic = np.load("images_and_data/F3_original_subvolume_IL230-430_XL475-675_T200-1800.npy")
+    fd = FilterDesigner(seismic[:-1,:,:])
     fd.app().servable("Filter Designer")
