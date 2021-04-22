@@ -59,14 +59,14 @@ class FilterDesigner(param.Parameterized):
 
         data_sq, slc = utils.pad_next_square_size(data)
         filtered = utils.apply_filter(data_sq, self.filter_)
-        filtered = utils.reverse_padding(data_sq, filtered, slc)
+        filtered = utils.reverse_padding(data, filtered, slc)
 
         base_image = hv.Image(data, group="shallow").opts(cmap="Greys")
 
         filtered_image = hv.Image(filtered, group="shallow").opts(cmap="Greys")
 
         differences = hv.Image(
-            data.T - filtered, group='shallow'
+            data - filtered, group='shallow'
         ).opts(cmap='Greys')
 
         return base_image + filtered_image + differences
