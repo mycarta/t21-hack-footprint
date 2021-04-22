@@ -251,7 +251,7 @@ def apply_filter_pytorch(arr, _filter, axes=(0, 1), cuda=False):
     """
     _filter = torch.from_numpy(_filter)
     arr = torch.from_numpy(arr)
-    if cuda == True:
+    if cuda is True:
         _filter = _filter.cuda()
         arr = arr.cuda()
     result = torch.fft.ifft2(
@@ -259,7 +259,7 @@ def apply_filter_pytorch(arr, _filter, axes=(0, 1), cuda=False):
             torch.fft.ifftshift(1.0 - _filter), torch.fft.fft2(arr, dim=axes)
         )
     )
-    if cuda == True:
+    if cuda is True:
         result = result.cpu()
     result = result.numpy().real
     return result
@@ -271,7 +271,7 @@ def apply_filter_pytorch_vec(arr, _filter, axes=(0, 1), cuda=False):
     """
     _filter = torch.from_numpy(_filter)
     arr = torch.from_numpy(arr)
-    if cuda == True:
+    if cuda is True:
         _filter = _filter.cuda()
         arr = arr.cuda()
     result = torch.fft.ifft2(
@@ -280,7 +280,7 @@ def apply_filter_pytorch_vec(arr, _filter, axes=(0, 1), cuda=False):
         ),
         dim=axes,
     )
-    if cuda == True:
+    if cuda is True:
         result = result.cpu()
     result = result.numpy().real
     return result
@@ -298,7 +298,7 @@ def apply_filter_iterative_pytorch(_filter, arr, cuda=False):
         ts, slc = pad_next_square_size(out[:, :, i])
 
         # do all the FFT magic to apply the filter to the slice
-        if cuda == True:
+        if cuda is True:
             temp = apply_filter_pytorch(ts, _filter, cuda=True)
         else:
             temp = apply_filter_pytorch(ts, _filter)
@@ -315,7 +315,7 @@ def apply_filter_vector_pytorch(_filter, arr, cuda=False):
     out = arr.copy()
     tc, slc = pad_next_square_size(out)
 
-    if cuda == True:
+    if cuda is True:
         temp = apply_filter_pytorch_vec(tc, _filter[:, :, None], cuda=True)
     else:
         temp = apply_filter_pytorch_vec(tc, _filter[:, :, None], cuda=False)
@@ -347,20 +347,21 @@ def time_cube_to_xarray(time_cube):
     )
     return ds_xr
 
+
 def scipy_gaussian_2D(std):
-    '''
+    """
     2D Gaussian filter kernel similar to astropy\'s Gaussian2DKernel
     (https://docs.astropy.org/en/stable/api/astropy.convolution.Gaussian2DKernel.html#astropy.convolution.Gaussian2DKernel)
-    using scipy.signal.gaussian 
+    using scipy.signal.gaussian
     (and inspired by https://gist.github.com/thomasaarholt/267ec4fff40ca9dff1106490ea3b7567)
-    
-    Parameters: 
+
+    Parameters:
     std (int) : standard deviation of the Gaussian in pixels
-    
+
     Returns:
     out (2D array): 2D Gaussian filter kernel
-    '''
-    ksp1D = signal.gaussian(std*8+1, std)
+    """
+    ksp1D = signal.gaussian(std * 8 + 1, std)
     ksp2D = np.outer(ksp1D, ksp1D)
-    ksp2D /= (2*np.pi*(std**2))
+    ksp2D /= 2 * np.pi * (std ** 2)
     return ksp2D
