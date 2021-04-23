@@ -9,6 +9,7 @@ Repo for the [TRANSFORM 2021 Hackathon](https://github.com/softwareunderground/t
 * [@scibbatical](https://github.com/scibbatical)
 * [@leocd91](https://github.com/leocd91)
 * [WesleyTheGeolien](https://github.com/WesleyTheGeolien)
+* [markogauk](markogauk)
 
 ## Conda setup
 ```
