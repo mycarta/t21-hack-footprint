@@ -29,6 +29,30 @@ To deactivate the environment, use
      $ conda deactivate
 ```
 
+## Requirements
+```
+numpy==1.18.5
+matplotlib==3.2.2
+param==1.10.1
+scipy==1.5.0
+scikit_image==0.16.2
+holoviews==1.14.3
+torch==1.8.1
+dask==2.19.0
+panel==0.11.3
+hvplot==0.7.1
+xarray==0.17.0
+numpy==1.20.2
+skimage==0.0
+```
+
+## How to run
+Run :
+```
+python -m panel serve ./t21-footprint/smallfoot/app.py --dev
+```
+Then go to your browser and access <http://localhost:5006/app>
+
 ## Description and background
 - Pre-hackathon meetup PowerPoint presentation [here](https://docs.google.com/presentation/d/1xVvdvlpVVrXmgntH651JXqLq-8w0bPWm4E9x2iRnNYk/edit#slide=id.gd23752e0b2_1_0)
 - Introduction to post-hack presentation [here](https://docs.google.com/presentation/d/1kQqf2JJU0g1ixrTFqaAAJ5eFQHL0QngZ69yIIlUp7no/edit?usp=sharing)
