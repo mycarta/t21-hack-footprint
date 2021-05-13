@@ -25,26 +25,21 @@ class FilterDesigner(param.Parameterized):
 
     filter_ = param.Parameter()
     selection = param.Parameter()
-    listfile = param.Parameter()
-    ds = param.Parameter()
-    select_file = param.Parameter()
 
     def __init__(self, listfile, **params):
-        self.listfile = listfile
-        time_cube=np.load(self.listfile[0])[:-1,:,:]
+        time_cube=np.load(listfile[0])[:-1,:,:]
         self.ds = utils.time_cube_to_xarray(time_cube)
         self.param.filter_.default = np.zeros(
             (max(time_cube.shape[:2]), max(time_cube.shape[:2]))
         )
         self.param.selection.default = link_selections.instance(unselected_alpha=0.4)
         super().__init__(**params)
-        listname = [w.split('/')[-1] for w in self.listfile]
+        listname = [w.split('/')[-1] for w in listfile]
         self._init_options(listname)
 
     def _init_options(self, listname):
         #listname = [w.split('/')[-1] for w in listfile]
         self.select_file = pn.widgets.Select(name='List available:', options=listname, size=1,width=230)
-        self.add_file = pn.widgets.FileInput()
         self.time_slice_slider = pn.widgets.IntSlider(
             start=0, end=len(self.ds.time_slice) - 1, width=200
         )
@@ -55,7 +50,6 @@ class FilterDesigner(param.Parameterized):
             width=200,
         )
         self.reset_button=pn.widgets.Button(name='Reset Pick', button_type='warning', width=100)
-        self.add_button=pn.widgets.Button(name='Add File', button_type='warning', width=100)
         self.load_button=pn.widgets.Button(name='Load', button_type='danger', width=100)
         self.save_button = pn.widgets.FileDownload(
             label="\u21A7 Save",
@@ -64,7 +58,6 @@ class FilterDesigner(param.Parameterized):
             width=100,
             filename=self.select_file.value.replace('.npy','_')+"filtered_cube.npy",
         )
-        self.add_button.on_click(self.append_file)
         self.save_button.callback = self.save
         self.reset_button.on_click(self.reset)
         self.load_button.on_click(self._update_self)
@@ -74,9 +67,6 @@ class FilterDesigner(param.Parameterized):
             pn.pane.Markdown("##Select File"),
             self.select_file,
             self.load_button,
-            pn.pane.Markdown("##Add file from disk"),
-            self.add_file,
-            self.add_button,
             pn.pane.Markdown(""),
             pn.pane.Markdown("##Filter Slice"),
             self.time_slice_slider,
@@ -201,39 +191,6 @@ class FilterDesigner(param.Parameterized):
         #print(output.getvalue())
         output.seek(0)
         return output
-
-
-    #def append_file(self, event=None):
-
-        # Code for adding to selection list. Currently not refreshing the selection list. Requires a way to store the values of the data
-
-     #   print('Adding file to list:')
-    #    print(self.add_file.filename)
-     #   new_file = self.add_file
-
-    #    self.listfile.append(new_file.filename)
-     #   listname = [w.split('/')[-1] for w in self.listfile]
-        
-    #   self.select_file = pn.widgets.Select(name='List available:', options=listname, size=1,width=230)
-
-     #   print(self.listfile)
-    #    return self
-
-    def append_file(self, event=None):
-
-        # Code for selecting a file and immediately using it
-        print("adding file")
-        new_file = self.add_file.value
-
-        time_cube=np.load(new_file)[:-1,:,:]
-
-        self.ds = utils.time_cube_to_xarray(time_cube)
-
-        print(self.ds.shape)
-
-        return self
-
-
 
     def reset(self, event=None):
         print('reset:',self.select_file.value,self.ds.isel(time_slice=self.time_slice_deep_slider.value).amplitude.values.shape,self.filter_.shape)
