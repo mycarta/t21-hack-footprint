@@ -43,7 +43,6 @@ panel==0.11.3
 hvplot==0.7.1
 xarray==0.17.0
 numpy==1.20.2
-skimage==0.0
 ```
 
 ## How to run
