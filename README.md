@@ -45,12 +45,17 @@ xarray==0.17.0
 numpy==1.20.2
 ```
 
-## How to run
-Run :
+## How to Install
+1. Clone the Repository.
+2. Install the requirements :
+```
+pip install -r requirements.txt
+```
+4. Run :
 ```
 python -m panel serve ./t21-footprint/smallfoot/app.py --dev
 ```
-Then go to your browser and access <http://localhost:5006/app>
+5. Go to your browser and access <http://localhost:5006/app>
 
 ## Description and background
 - Pre-hackathon meetup PowerPoint presentation [here](https://docs.google.com/presentation/d/1xVvdvlpVVrXmgntH651JXqLq-8w0bPWm4E9x2iRnNYk/edit#slide=id.gd23752e0b2_1_0)
