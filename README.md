@@ -4,6 +4,8 @@ Repo for the [TRANSFORM 2021 Hackathon](https://github.com/softwareunderground/t
 ## Interactive app name 
 **F.R.I.D.A.**: Footprint Removal Interactive Design App
 
+![Demo](https://github.com/mycarta/t21-hack-footprint/blob/main/dev/demo3.gif)
+
 ## Slack channel
 [t21-hack-footprint](https://app.slack.com/client/T094HBB9T/C01SRMBK50B/thread/C01MZBV60G0-1616097803.005500)
 
