@@ -33,7 +33,6 @@ To deactivate the environment, use
 
 ## Requirements
 ```
-numpy==1.18.5
 matplotlib==3.2.2
 param==1.10.1
 scipy==1.5.0
